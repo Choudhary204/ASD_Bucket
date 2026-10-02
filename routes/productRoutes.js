@@ -2,18 +2,24 @@ const express = require("express");
 
 const productController = require("../controllers/productController");
 
+const {
+    cacheMiddleware
+} = require("../middleware/cacheMiddleware");
+
+const invalidateCache = require("../middleware/invalidateCache");
+
 const router = express.Router();
 
-router.get("/", productController.getProducts);
+router.get("/", cacheMiddleware, productController.getProducts);
 
-router.get("/:id", productController.getProductById);
+router.get("/:id", cacheMiddleware, productController.getProductById);
 
-router.post("/", productController.createProduct);
+router.post("/", invalidateCache, productController.createProduct);
 
-router.put("/:id", productController.updateProduct);
+router.put("/:id", invalidateCache, productController.updateProduct);
 
-router.patch("/:id", productController.updateProduct);
+router.patch("/:id", invalidateCache, productController.updateProduct);
 
-router.delete("/:id", productController.deleteProduct);
+router.delete("/:id", invalidateCache, productController.deleteProduct);
 
 module.exports = router;
